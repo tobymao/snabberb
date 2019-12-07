@@ -52,13 +52,13 @@ class Application < Snabberb::Component
 
   def render
     rows = store(:values).map.with_index do |value, index|
-      c(Row, index: index, value: value)
+      h(Row, index: index, value: value)
     end
 
     h(:div, { style: { width: '100px' } }, [
       h(:div, 'Rows'),
       *rows,
-      c(Form),
+      h(Form),
     ])
   end
 end

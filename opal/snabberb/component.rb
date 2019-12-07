@@ -50,25 +50,28 @@ module Snabberb
       raise NotImplementedError
     end
 
-    # Building block for dom elements using Snabbdom h.
+    # Building block for dom elements using Snabbdom h and Snabberb components.
     #
-    # Props are not required and children can be passed as the second argument.
+    # Props are not required for HTML tags and children can be passed as the second argument.
+    # Components do not take in children as they are already embeded within the class.
     #
     # For eaxmple:
     #   h(:div, 'Hello world')
     #   h(:div, { style: { width: '100%' }, 'Hello World!')
     #   h(:div, [h(:div), h(:div)])
-    def h(tag, props = {}, children = nil)
-      props_is_hash = props.is_a?(Hash)
-      children = props if !children && !props_is_hash
-      props = {} unless props_is_hash
-      `snabbdom.h(#{tag}, #{Native.convert(props)}, #{children})`
-    end
+    #   h(MyComponent, need1=1, need2=2)
+    def h(element, props = {}, children = nil)
+      if element.is_a?(Class)
+        raise "Element '#{element}' must be a subclass of #{self.class}" unless element <= Component
 
-    # Used to instantiate nested components.
-    def c(component, props = {})
-      component = component.new(@root, **props) if component.is_a?(Class)
-      component.render
+        component = element.new(@root, **props)
+        component.render
+      else
+        props_is_hash = props.is_a?(Hash)
+        children = props if !children && !props_is_hash
+        props = {} unless props_is_hash
+        `snabbdom.h(#{element}, #{Native.convert(props)}, #{children})`
+      end
     end
 
     def update
