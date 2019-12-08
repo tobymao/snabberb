@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'A simple Opal view framework based on Snabbdom.'
   spec.description   = <<~DESCRIPTION
-    Snabberb is a simple Opal view framework based on Snabbdom. You can write efficient reactive Javascript in pure Ruby. Snabberb provides a simple way to track state'}
+    Snabberb is a minimalistic Opal view framework based on Snabbdom. You can write efficient reactive Javascript in pure Ruby. Snabberb also provides a simple way to track state.
   DESCRIPTION
   spec.homepage      = 'https://github.com/tobymao'
   spec.license       = 'MIT'
