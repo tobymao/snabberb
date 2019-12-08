@@ -2,7 +2,7 @@
 
 Snabberb is a simple Ruby view framework built on [Opal](https://github.com/opal/opal) and [Snabbdom](https://github.com/snabbdom/snabbdom).
 
-You can write reactive views in Ruby that compile to efficient Javascript. The entile library is just one main file.
+You can write reactive views in plain Ruby that compile to efficient Javascript.
 
 ## Inline Example
 
@@ -113,6 +113,7 @@ Components can define needs which allow parent components to pass down arguments
 Needs are by default required. They can be set with default values. Needs are accesible with instance variables that are automatically set.
 
 ```ruby
+...
 class NeedsExample < Snabberb::Component
   needs :name
   needs :value, default: 0, store: true
@@ -153,10 +154,10 @@ Or install it yourself as:
 
 ## Development
 
-`
+```
 bundle install
 bundle exec rake
-`
+```
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/tobymao/snabberb.
