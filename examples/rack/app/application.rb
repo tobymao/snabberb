@@ -6,14 +6,15 @@ require 'snabberb'
 class Row < Snabberb::Component
   needs :index
   needs :value
+  needs :selected_id, default: nil, store: true
 
   def selected?
-    @index == store(:selected_id)
+    @index == @selected_id
   end
 
   def render
     onclick = lambda do
-      set_store(:selected_id, selected? ? nil : @index)
+      store(:selected_id, selected? ? nil : @index)
     end
 
     style = {
@@ -30,13 +31,15 @@ class Row < Snabberb::Component
 end
 
 class Form < Snabberb::Component
+  needs :values, store: true
+
   def render
-    input = h(:input, props: { type: 'text', value: store(:values).last })
+    input = h(:input, props: { type: 'text', value: @values.last })
 
     onclick = lambda do |event|
       value = input.JS['elm'].JS['value']
       event.JS.preventDefault
-      set_store(:values, store(:values) + [value])
+      store(:values, @values + [value])
     end
 
     h(:form, { style: { width: '300px' } }, [
@@ -48,19 +51,18 @@ end
 
 class Application < Snabberb::Component
   needs :values, store: true
-  needs :selected_id, default: nil, store: true
 
   def render
-    rows = store(:values).map.with_index do |value, index|
+    rows = @values.map.with_index do |value, index|
       h(Row, index: index, value: value)
     end
 
     h(:div, { style: { width: '100px' } }, [
-      h(:div, 'Rows'),
+      h(:div, 'List of Fruits'),
       *rows,
       h(Form),
     ])
   end
 end
 
-Application.attach('app', values: [1, 2, 3])
+Application.attach('app', values: %w[apple banana cantaloupe])

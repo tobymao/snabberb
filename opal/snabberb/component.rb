@@ -42,7 +42,7 @@ module Snabberb
       @root = root || self
       @store = root? ? {} : @root.store
 
-      unused = needs.keys - self.class.class_needs.keys
+      unused = needs.keys - class_needs.keys
       raise "Unused needs passed to component: #{unused}." unless unused.empty?
 
       init_needs(needs)
@@ -104,29 +104,44 @@ module Snabberb
       @root.node = node
     end
 
-    # Get the store if no key is passed or get the value of a stored key.
-    def store(key = nil)
-      key.nil? ? @store : @store[key]
+    # Store a value and trigger and update.
+    # If called with no arguments, return the store object.
+    def store(key = nil, value = nil)
+      return @store if key.nil?
+      raise "Cannot store key '#{key}' since it is not a stored need of #{self.class}." unless stores?(key)
+
+      @store[key] = value
+
+      ivar = "@#{key}"
+      instance_variable_set(ivar, value)
+      root.instance_variable_set(ivar, value) if !root? && root.stores?(key)
+
+      update
     end
 
-    def set_store(key, value)
-      @store[key] = value
-      update
+    def class_needs
+      self.class.class_needs
+    end
+
+    def stores?(key)
+      class_needs.dig(key, :store)
     end
 
     private
 
     def init_needs(needs)
-      self.class.class_needs.each do |key, opts|
-        if needs.key?(key)
-          instance_variable_set("@#{key}", needs[key])
+      class_needs.each do |key, opts|
+        ivar = "@#{key}"
+        if @store.key?(key)
+          instance_variable_set(ivar, @store[key])
+        elsif needs.key?(key)
+          @store[key] = needs[key] if opts[:store] && !@store.key?(key)
+          instance_variable_set(ivar, needs[key])
         elsif opts&.key?(:default)
-          instance_variable_set("@#{key}", opts[:default])
+          instance_variable_set(ivar, opts[:default])
         else
           raise "Needs '#{key}' required but not provided."
         end
-
-        @store[key] ||= needs[key] if opts[:store]
       end
     end
   end
