@@ -45,7 +45,7 @@ TextBox.html(text: 'hello world')
 
 ## Usage
 
-### Creating DOM elements with h
+### Creating DOM Elements With h
 
 Subclass Snabberb::Component and override #render to build divs using \#h.
 
