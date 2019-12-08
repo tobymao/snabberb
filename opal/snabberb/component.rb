@@ -31,6 +31,12 @@ module Snabberb
       component.update
     end
 
+    # Render the component as an HTML string using snabbdom-to-html.
+    def self.html(**passed_needs)
+      component = new(nil, passed_needs)
+      component.html
+    end
+
     # You should not call initialize manually.
     def initialize(root, needs)
       @root = root || self
@@ -46,8 +52,13 @@ module Snabberb
       self == @root
     end
 
+    # Subclasses should override this and return a single h (can be nested).
     def render
       raise NotImplementedError
+    end
+
+    def html
+      `toHTML(#{render})`
     end
 
     # Building block for dom elements using Snabbdom h and Snabberb components.
@@ -74,10 +85,12 @@ module Snabberb
       end
     end
 
+    # Update the dom with the request animation frame queue.
     def update
       `window.requestAnimationFrame(function(timestamp) {#{update!}})`
     end
 
+    # Update the dom immediately.
     def update!
       @@patcher ||= %x{snabbdom.init([
         snabbdom_attributes.default,
@@ -91,6 +104,7 @@ module Snabberb
       @root.node = node
     end
 
+    # Get the store if no key is passed or get the value of a stored key.
     def store(key = nil)
       key.nil? ? @store : @store[key]
     end
