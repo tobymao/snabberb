@@ -42,6 +42,7 @@ TextBox.html(text: 'hello world')
 
 ## Examples
 [Rack App](examples/rack)
+[Roda App with HTML Prerendering](examples/roda)
 
 ## Usage
 
@@ -135,6 +136,16 @@ When simple state changes must be tracked, a need can define store: true. This w
 The precedence of need values is stored > passed needs > default value.
 
 Needs can be set with #store which will trigger a view update. Snabberb uses Snabbdom to update the DOM, so only the differences in the DOM are changed.
+
+### Prerendering
+
+You can prerender your HTML by calling
+
+```ruby
+Snabberb.prerender_script('LayoutClass', 'ApplicationClass', 'application_id', javascript_include_tags: '', **needs)
+```
+
+A detailed example can be found [in the Roda example](examples/roda).
 
 ## Installation
 

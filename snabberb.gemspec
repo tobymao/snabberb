@@ -25,13 +25,14 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = %w[lib opal]
+  spec.required_ruby_version = '>= 2.3'
 
   spec.add_dependency 'opal', '~> 1.0'
 
-  spec.add_development_dependency 'bundler', '~> 2.0'
+  spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'c_lexer'
   spec.add_development_dependency 'execjs'
-  spec.add_development_dependency 'rake', '~> 12.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 0.7'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rubocop'
 end

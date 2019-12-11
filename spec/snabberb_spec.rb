@@ -42,6 +42,28 @@ describe Snabberb do
     expect(Snabberb::VERSION).not_to be nil
   end
 
+  describe '.prerender' do
+    it 'generates the correct prerender script' do
+      script = Snabberb.prerender_script(
+        'layout',
+        'app',
+        'app_id',
+        need: 'hello',
+        array_need: [1],
+        hash_need: { x: 1 },
+      )
+      expect(script).to eq(
+        <<~JS
+          Opal.$$.layout.$html(Opal.hash({
+            application: Opal.$$.app.$new(null, Opal.hash({"need":"hello","array_need":[1],"hash_need":{"x":1}})).$render(),
+            javascript_include_tags: '',
+            attach_func: 'Opal.$$.app.$attach("app_id", Opal.hash({"need":"hello","array_need":[1],"hash_need":{"x":1}}))'
+          }))
+        JS
+      )
+    end
+  end
+
   describe '.html' do
     it 'can render a div' do
       html = elements_to_html(

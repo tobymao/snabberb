@@ -1,4 +1,4 @@
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   Enabled: false
 
 Metrics/AbcSize:
@@ -34,4 +34,4 @@ Style/TrailingCommaInHashLiteral:
   Enabled: false
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.3

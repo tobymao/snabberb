@@ -11,20 +11,38 @@ GEM
     c_lexer (2.6.4.1.1)
       ast (~> 2.4.0)
       parser (= 2.6.4.1)
+    concurrent-ruby (1.1.5)
+    execjs (2.7.0)
+    libv8 (7.3.492.27.1)
+    mini_racer (0.2.8)
+      libv8 (>= 6.9.411)
     opal (1.0.1)
       ast (>= 2.3.0)
       parser (~> 2.6)
+    opal-sprockets (0.4.8.1.0.3.7)
+      opal (~> 1.0.0)
+      sprockets (~> 3.7)
+      tilt (>= 1.4)
     parser (2.6.4.1)
       ast (~> 2.4.0)
     rack (2.0.7)
+    roda (3.26.0)
+      rack
+    sprockets (3.7.2)
+      concurrent-ruby (~> 1.0)
+      rack (> 1, < 3)
+    tilt (2.0.10)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   c_lexer
+  execjs
+  mini_racer
   opal
-  rack
+  opal-sprockets
+  roda
   snabberb!
 
 BUNDLED WITH

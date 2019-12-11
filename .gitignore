@@ -6,6 +6,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/examples/roda/public
 
 .DS_STORE
 *.swp

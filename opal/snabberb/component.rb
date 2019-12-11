@@ -16,12 +16,11 @@ module Snabberb
     #   :default - Sets the default value, if not passed the need is considered required.
     #   :store - Whether or not to store the need as state. The default is false.
     def self.needs(key, **opts)
-      @class_needs ||= {}
-      @class_needs[key] = opts
+      class_needs[key] = opts
     end
 
     def self.class_needs
-      @class_needs || {}
+      @class_needs ||= superclass.respond_to?(:class_needs) ? superclass.class_needs.clone : {}
     end
 
     # Attach the root component to a dom element by container id.
@@ -144,5 +143,26 @@ module Snabberb
         end
       end
     end
+  end
+
+  # Sublcass this to prerender applications.
+  class Layout < Snabberb::Component
+    needs :application # the rendered application
+    needs :attach_func # function to reattach the application after dom load
+    needs :javascript_include_tags # all necessary javascript tags
+
+    # Example render function.
+    # def render
+    #   h(:html, [
+    #     h(:head, [
+    #       h(:meta, { props: { charset: 'utf-8'} }),
+    #     ]),
+    #     h(:body, [
+    #       @application,
+    #       h(:div, { props:  { innerHTML: @javascript_include_tags } }),
+    #       h(:script, { props:  { innerHTML: @attach_func} }),
+    #     ]),
+    #   ])
+    # end
   end
 end
