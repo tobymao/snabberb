@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'execjs'
-require 'json'
 require 'opal'
 require 'opal/sprockets'
 require 'roda'
