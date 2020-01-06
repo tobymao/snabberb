@@ -85,12 +85,16 @@ module Snabberb
     end
 
     # Update the dom with the request animation frame queue.
+    # Add to a queue of request_ids so we can track calls.
     def update
-      `window.requestAnimationFrame(function(timestamp) {#{update!}})`
+      request_ids << `window.requestAnimationFrame(function(timestamp) {#{update!}})`
     end
 
-    # Update the dom immediately.
+    # Update the dom immediately if this is the final animation request.
     def update!
+      request_ids.shift
+      return unless request_ids.empty?
+
       @@patcher ||= %x{snabbdom.init([
         snabbdom_attributes.default,
         snabbdom_class.default,
@@ -113,7 +117,7 @@ module Snabberb
 
       ivar = "@#{key}"
       instance_variable_set(ivar, value)
-      root.instance_variable_set(ivar, value) if !root? && root.stores?(key)
+      @root.instance_variable_set(ivar, value) if !root? && @root.stores?(key)
 
       update
     end
@@ -124,6 +128,10 @@ module Snabberb
 
     def stores?(key)
       class_needs.dig(key, :store)
+    end
+
+    def request_ids
+      root? ? @request_ids ||= [] : @root.request_ids
     end
 
     private
