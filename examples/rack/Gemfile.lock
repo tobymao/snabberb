@@ -16,7 +16,7 @@ GEM
       parser (~> 2.6)
     parser (2.6.4.1)
       ast (~> 2.4.0)
-    rack (2.0.8)
+    rack (2.1.0)
 
 PLATFORMS
   ruby

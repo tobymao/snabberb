@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'compiled-opal'
+require 'polyfill'
+require 'snabberb'
 require 'set'
 
 class Tile < Snabberb::Component

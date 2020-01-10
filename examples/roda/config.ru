@@ -2,37 +2,40 @@
 
 require 'execjs'
 require 'opal'
-require 'opal/sprockets'
 require 'roda'
-require 'sprockets'
 require 'snabberb'
+require 'tilt/opal'
 
-LIB_NAME = 'lib.js'
-LIB_PATH = "./public/#{LIB_NAME}"
-Opal.append_path('app')
-File.write(LIB_PATH, Opal::Builder.build('requires')) unless File.file?(LIB_PATH)
+class OpalTemplate < Opal::TiltTemplate
+  def evaluate(_scope, _locals)
+    builder = Opal::Builder.new(stubs: 'opal')
+    builder.append_paths('assets/js')
+    builder.append_paths('build')
+
+    opal_path = 'build/compiled-opal.js'
+    File.write(opal_path, Opal::Builder.build('opal')) unless File.exist?(opal_path)
+
+    content = builder.build(file).to_s
+    map_json = builder.source_map.to_json
+    "#{content}\n#{to_data_uri_comment(map_json)}"
+  end
+
+  def to_data_uri_comment(map_json)
+    "//# sourceMappingURL=data:application/json;base64,#{Base64.encode64(map_json).delete("\n")}"
+  end
+end
+
+Tilt.register 'rb', OpalTemplate
 
 class App < Roda
   plugin :public
-
-  context = ExecJS.compile(File.read(LIB_PATH) + Opal::Builder.build('application').to_s)
-
-  environment = Sprockets::Environment.new
-  Opal.paths.each { |p| environment.append_path(p) }
-
-  javascript_include_tags = "<script src=#{LIB_NAME}></script>" + Opal::Sprockets.javascript_include_tag(
-    'application',
-    sprockets: environment,
-    prefix: '/assets',
-    debug: true,
-  )
+  plugin :assets, js: 'application.rb'
+  compile_assets
+  context = ExecJS.compile(File.read("#{assets_opts[:compiled_js_path]}.#{assets_opts[:compiled]['js']}.js"))
 
   route do |r|
     r.public
-
-    r.on 'assets' do
-      r.run environment
-    end
+    r.assets
 
     r.root do
       context.eval(
@@ -40,7 +43,7 @@ class App < Roda
           'Index',
           'Map',
           'map_id',
-          javascript_include_tags: javascript_include_tags,
+          javascript_include_tags: assets(:js),
           size_x: 30,
           size_y: 30,
         )
