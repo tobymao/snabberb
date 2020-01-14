@@ -79,9 +79,10 @@ class Map < Snabberb::Component
       overflow: 'auto',
     }
 
+    # adding 44 and 21 helps with lower size_x and size_y values
     svg_style = {
-      width: "#{@size_x * 50}px",
-      height: "#{@size_y * 80}px",
+      width: "#{44 + (@size_x * 50)}px",
+      height: "#{21 + (@size_y * 80)}px",
     }
 
     h(:div, { props: { id: 'map_id' }, style: container_style }, [
