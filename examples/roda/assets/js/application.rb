@@ -21,6 +21,7 @@ class Hex < Snabberb::Component
 
   needs :x
   needs :y
+  needs :id
   needs :selected, default: Set.new, store: true
 
   def translation
@@ -53,6 +54,7 @@ class Hex < Snabberb::Component
         transform: transform,
         fill: selected ? 'yellow' : 'white',
         stroke: 'black',
+        id: @id,
       },
       style: { cursor: 'pointer' },
       on: { click: onclick }
@@ -69,9 +71,14 @@ class Map < Snabberb::Component
   def render
     hexes = @size_x.times.flat_map do |x|
       @size_y.times.map do |y|
-        h(Hex, x: y.even? ? x + 1 : x, y: x.even? ? y + 1 : y)
+        row = y
+        column = x
+
+        next nil if (row.even? && column.even?) || (row.odd? && column.odd?)
+
+        h(Hex, id: "#{row},#{column}", x: x, y: y)
       end
-    end
+    end.compact
 
     container_style = {
       width: '100%',
