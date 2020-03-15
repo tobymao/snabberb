@@ -107,9 +107,9 @@ module Snabberb
       @root.node = node
     end
 
-    # Store a value and trigger and update.
+    # Store a value and trigger and update unless skip is true.
     # If called with no arguments, return the store object.
-    def store(key = nil, value = nil)
+    def store(key = nil, value = nil, skip: false)
       return @store if key.nil?
       raise "Cannot store key '#{key}' since it is not a stored need of #{self.class}." unless stores?(key)
 
@@ -119,7 +119,7 @@ module Snabberb
       instance_variable_set(ivar, value)
       @root.instance_variable_set(ivar, value) if !root? && @root.stores?(key)
 
-      update
+      update unless skip
     end
 
     def class_needs
