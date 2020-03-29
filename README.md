@@ -45,6 +45,8 @@ TextBox.html(text: 'hello world')
 
 [Roda App with HTML Prerendering](examples/roda)
 
+[18xx Board Game Engine](https://github.com/tobymao/18xx)
+
 ## Usage
 
 ### Creating DOM Elements With h
