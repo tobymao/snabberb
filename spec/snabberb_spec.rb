@@ -49,17 +49,18 @@ describe Snabberb do
         'app',
         'app_id',
         need: 'hello',
-        array_need: [1, { x: 1 }],
+        array_need: [1, { x: 1, z: nil }],
         hash_need: { x: 1, y: [1], z: { a: 1 } },
       )
 
       # couldn't get the matchers to work
-      # rubocop:disable Metrics/LineLength
+      # rubocop:disable Layout/LineLength
+      expect(script.include?('Opal.$$.app.$attach(\"app_id\", Opal.hash(\"need\",\"hello\",\"array_need\",[1,Opal.hash(\"x\",1,\"z\",Opal.nil)],\"hash_need\",Opal.hash(\"x\",1,\"y\",[1],\"z\",Opal.hash(\"a\",1))))')).to be_truthy
       expect(script.include?('Opal.$$.layout.$html(Opal.hash({')).to be_truthy
-      expect(script.include?('application: Opal.$$.app.$new(null, Opal.hash("need","hello","array_need",[1,Opal.hash("x",1)],"hash_need",Opal.hash("x",1,"y",[1],"z",Opal.hash("a",1)))).$render(),')).to be_truthy
+      expect(script.include?('application: Opal.$$.app.$new(null, Opal.hash("need","hello","array_need",[1,Opal.hash("x",1,"z",Opal.nil)],"hash_need",Opal.hash("x",1,"y",[1],"z",Opal.hash("a",1)))).$render(),')).to be_truthy
       expect(script.include?("javascript_include_tags: '',")).to be_truthy
-      expect(script.include?('attach_func: "Opal.$$.app.$attach(\"app_id\", Opal.hash(\"need\",\"hello\",\"array_need\",[1,Opal.hash(\"x\",1)],\"hash_need\",Opal.hash(\"x\",1,\"y\",[1],\"z\",Opal.hash(\"a\",1))))"')).to be_truthy
-      # rubocop:enable Metrics/LineLength
+      expect(script.include?('')).to be_truthy
+      # rubocop:enable Layout/LineLength
     end
   end
 

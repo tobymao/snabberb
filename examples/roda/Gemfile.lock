@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    snabberb (0.2.2)
+    snabberb (0.2.3)
       opal (~> 1.0)
 
 GEM
@@ -11,12 +11,12 @@ GEM
     c_lexer (2.6.4.1.1)
       ast (~> 2.4.0)
       parser (= 2.6.4.1)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     execjs (2.7.0)
     libv8 (7.3.492.27.1)
     mini_racer (0.2.9)
       libv8 (>= 6.9.411)
-    opal (1.0.2)
+    opal (1.0.3)
       ast (>= 2.3.0)
       parser (~> 2.6)
     opal-sprockets (0.4.8.1.0.3.7)
@@ -25,8 +25,8 @@ GEM
       tilt (>= 1.4)
     parser (2.6.4.1)
       ast (~> 2.4.0)
-    rack (2.1.0)
-    roda (3.27.0)
+    rack (2.2.2)
+    roda (3.30.0)
       rack
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)

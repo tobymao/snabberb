@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    snabberb (0.2.1)
+    snabberb (0.2.3)
       opal (~> 1.0)
 
 GEM
@@ -11,12 +11,12 @@ GEM
     c_lexer (2.6.4.1.1)
       ast (~> 2.4.0)
       parser (= 2.6.4.1)
-    opal (1.0.2)
+    opal (1.0.3)
       ast (>= 2.3.0)
       parser (~> 2.6)
     parser (2.6.4.1)
       ast (~> 2.4.0)
-    rack (2.1.0)
+    rack (2.2.2)
 
 PLATFORMS
   ruby
