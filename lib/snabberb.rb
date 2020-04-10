@@ -41,7 +41,6 @@ module Snabberb
   def self.prerender_script(layout, application, application_id, javascript_include_tags: '', **needs)
     needs = wrap(needs)
     attach_func = wrap_s("Opal.$$.#{application}.$attach(\"#{application_id}\", #{needs})")
-    puts attach_func
 
     <<~JS
       Opal.$$.#{layout}.$html(Opal.hash({
