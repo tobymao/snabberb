@@ -139,7 +139,7 @@ module Snabberb
     def init_needs(needs)
       class_needs.each do |key, opts|
         ivar = "@#{key}"
-        if @store.key?(key)
+        if @store.key?(key) && opts[:store]
           instance_variable_set(ivar, @store[key])
         elsif needs.key?(key)
           @store[key] = needs[key] if opts[:store] && !@store.key?(key)
