@@ -102,8 +102,10 @@ describe Snabberb do
     end
 
     it 'can render a file' do
-      script = Snabberb.html('spec/test_component.rb', groceries: { 'apple': 1, 'sausage': 2 })
-      expect(evaluate(script)).to eq('<div style="width: 100%"><div>apple - 1</div><div>sausage - 2</div></div>')
+      script = Snabberb.html_script('spec/test_component.rb', groceries: { 'apple': 1, 'sausage': 2 })
+      expect(@js_context.eval(script)).to eq(
+        '<div style="width: 100%"><div>apple - 1</div><div>sausage - 2</div></div>'
+      )
     end
   end
 end

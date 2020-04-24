@@ -40,15 +40,17 @@ module Snabberb
 
   # takes in a file and needs
   # calls html on the CamelCased version of the file with the needs
-  def self.html(file, **needs)
+  def self.html_script(file, **needs)
     klass = file.split('/').last
                 .split('.').first
                 .split('_').map(&:capitalize).join
 
-    <<~RUBY
+    script = <<~RUBY
       #{File.read(file)}
       #{klass}.html(`#{wrap(needs)}`)
     RUBY
+
+    Opal.compile(script).strip.chomp(';')
   end
 
   def self.prerender_script(layout, application, application_id, javascript_include_tags: '', **needs)

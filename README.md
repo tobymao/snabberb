@@ -154,9 +154,9 @@ A detailed example can be found [in the Roda example](examples/roda).
 
 You can generate HTML from a component with a file.
 
-Snabberb.html('path/to/my\_component.rb', **needs)
+Snabberb.html\_script('path/to/my\_component.rb', **needs)
 
-This reads in the ruby file at the path and calls html on the CamelCased version of the file name.
+This reads in the ruby file at the path and generates javascript that calls html on the CamelCased version of the file name.
 
 ## Installation
 
