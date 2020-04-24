@@ -100,5 +100,10 @@ describe Snabberb do
 
       expect(html).to eq('<div><span>a span</span><div>child with value 2</div></div>')
     end
+
+    it 'can render a file' do
+      script = Snabberb.html('spec/test_component.rb', groceries: { 'apple': 1, 'sausage': 2 })
+      expect(evaluate(script)).to eq('<div style="width: 100%"><div>apple - 1</div><div>sausage - 2</div></div>')
+    end
   end
 end

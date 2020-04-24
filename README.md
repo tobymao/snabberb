@@ -150,6 +150,14 @@ Snabberb.prerender_script('LayoutClass', 'ApplicationClass', 'application_id', j
 
 A detailed example can be found [in the Roda example](examples/roda).
 
+### Generating HTML from a File
+
+You can generate HTML from a component with a file.
+
+Snabberb.html('path/to/my\_component.rb', **needs)
+
+This reads in the ruby file at the path and calls html on the CamelCased version of the file name.
+
 ## Installation
 
 Add this line to your application's Gemfile:

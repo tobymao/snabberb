@@ -18,7 +18,7 @@ module Snabberb
     when nil
       'Opal.nil'
     else
-      wrap_s(obj)
+      wrap_s(obj.to_s)
     end
   end
 
@@ -36,6 +36,19 @@ module Snabberb
     end.join(',')
 
     "Opal.hash(#{args})"
+  end
+
+  # takes in a file and needs
+  # calls html on the CamelCased version of the file with the needs
+  def self.html(file, **needs)
+    klass = file.split('/').last
+                .split('.').first
+                .split('_').map(&:capitalize).join
+
+    <<~RUBY
+      #{File.read(file)}
+      #{klass}.html(`#{wrap(needs)}`)
+    RUBY
   end
 
   def self.prerender_script(layout, application, application_id, javascript_include_tags: '', **needs)
