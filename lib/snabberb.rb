@@ -13,7 +13,7 @@ module Snabberb
       wrap_h(obj)
     when Array
       wrap_a(obj)
-    when Numeric
+    when Numeric, TrueClass, FalseClass
       obj
     when nil
       'Opal.nil'
