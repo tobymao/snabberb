@@ -1,13 +1,13 @@
 PATH
   remote: ../..
   specs:
-    snabberb (0.2.3)
+    snabberb (0.4.2)
       opal (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.0)
+    ast (2.4.1)
     c_lexer (2.6.4.1.1)
       ast (~> 2.4.0)
       parser (= 2.6.4.1)
@@ -28,4 +28,4 @@ DEPENDENCIES
   snabberb!
 
 BUNDLED WITH
-   2.1.2
+   2.1.4

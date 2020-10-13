@@ -96,11 +96,11 @@ module Snabberb
       return unless request_ids.empty?
 
       @@patcher ||= %x{snabbdom.init([
-        snabbdom_attributes.default,
-        snabbdom_class.default,
-        snabbdom_eventlisteners.default,
-        snabbdom_props.default,
-        snabbdom_style.default,
+        snabbdom.attributesModule,
+        snabbdom.classModule,
+        snabbdom.eventListenersModule,
+        snabbdom.propsModule,
+        snabbdom.styleModule,
       ])}
       node = @root.render
       @@patcher.call(@root.node, node)

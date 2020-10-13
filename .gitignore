@@ -8,6 +8,8 @@
 /tmp/
 /examples/roda/public
 /examples/roda/build
+/node_modules/
+package-lock.json
 
 .DS_STORE
 *.swp

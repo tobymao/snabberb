@@ -105,7 +105,7 @@ class NestedExample < Snabberb::Component
       h(:div, { style: { width: '100px' } }, [
         h(:div, 'hello'),
       ])
-    ](
+    ])
   end
 end
 ```

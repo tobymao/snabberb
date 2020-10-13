@@ -1,32 +1,32 @@
 PATH
   remote: ../..
   specs:
-    snabberb (0.2.5)
+    snabberb (0.4.2)
       opal (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.0)
+    ast (2.4.1)
     c_lexer (2.6.4.1.1)
       ast (~> 2.4.0)
       parser (= 2.6.4.1)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     execjs (2.7.0)
-    libv8 (7.3.492.27.1)
-    mini_racer (0.2.9)
-      libv8 (>= 6.9.411)
+    libv8 (8.4.255.0)
+    mini_racer (0.3.1)
+      libv8 (~> 8.4.255)
     opal (1.0.3)
       ast (>= 2.3.0)
       parser (~> 2.6)
-    opal-sprockets (0.4.8.1.0.3.7)
+    opal-sprockets (0.4.9.1.0.3.7)
       opal (~> 1.0.0)
       sprockets (~> 3.7)
       tilt (>= 1.4)
     parser (2.6.4.1)
       ast (~> 2.4.0)
     rack (2.2.3)
-    roda (3.30.0)
+    roda (3.36.0)
       rack
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
@@ -46,4 +46,4 @@ DEPENDENCIES
   snabberb!
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
