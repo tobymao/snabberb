@@ -141,14 +141,45 @@ describe Snabberb do
       expect(html).to eq('<div data-x="blue"></div>')
     end
 
+    it 'renders text' do
+      expect(elements_to_html("h('div', 'hello')")).to eq('<div>hello</div>')
+      expect(elements_to_html("h('div', 1)")).to eq('<div>1</div>')
+      expect(elements_to_html("h('div')")).to eq('<div></div>')
+      expect(elements_to_html("h('br')")).to eq('<br>')
+    end
+
+    it 'renders innerHTML' do
+      expect(elements_to_html("h('div', props: { innerHTML: '<div></div>' } )")).to eq('<div><div></div></div>')
+    end
+
+    it 'escapes text' do
+      html = elements_to_html("h('div.<', '>')")
+      expect(html).to eq('<div class="&lt;">&gt;</div>')
+
+      html = elements_to_html("h('div#<', '')")
+      expect(html).to eq('<div id="&lt;"></div>')
+
+      html = elements_to_html("h('div', { props: { '<': '>' } })")
+      expect(html).to eq('<div &lt;="&gt;"></div>')
+
+      html = elements_to_html("h('div', { attrs: { '<': '>' } })")
+      expect(html).to eq('<div &lt;="&gt;"></div>')
+
+      html = elements_to_html("h('div', { style: { '<': '>' } })")
+      expect(html).to eq('<div style="&lt;: &gt;"></div>')
+
+      html = elements_to_html("h('div', { dataset: { '<': '>' } })")
+      expect(html).to eq('<div data-&lt;="&gt;"></div>')
+    end
+
     it 'renders styles' do
       html = elements_to_html(
         <<-RUBY
-          h('div', { style: { backgroundColor: 'blue', 'top-margin' => 1} })
+          h('div', { style: { backgroundColor: 'blue', 'top-margin' => 1.1 } })
         RUBY
       )
 
-      expect(html).to eq('<div style="background-color: blue;top-margin: 1"></div>')
+      expect(html).to eq('<div style="background-color: blue; top-margin: 1.1"></div>')
     end
 
     it 'renders hyperscript' do

@@ -11,22 +11,26 @@ var _attributes = require("./node_modules/snabbdom/build/package/modules/attribu
 
 var _class = require("./node_modules/snabbdom/build/package/modules/class");
 
+var _dataset = require("./node_modules/snabbdom/build/package/modules/dataset");
+
 var _eventlisteners = require("./node_modules/snabbdom/build/package/modules/eventlisteners");
 
 var _props = require("./node_modules/snabbdom/build/package/modules/props");
 
 var _style = require("./node_modules/snabbdom/build/package/modules/style");
 
+// browserify build.js -p esmify -s snabbdom > opal/vendor/snabbdom.js
 module.exports.init = _init.init;
 module.exports.h = _h.h;
 module.exports.toVNode = _tovnode.toVNode;
 module.exports.attributesModule = _attributes.attributesModule;
 module.exports.classModule = _class.classModule;
+module.exports.datasetModule = _dataset.datasetModule;
 module.exports.eventListenersModule = _eventlisteners.eventListenersModule;
 module.exports.propsModule = _props.propsModule;
 module.exports.styleModule = _style.styleModule;
 
-},{"./node_modules/snabbdom/build/package/h":2,"./node_modules/snabbdom/build/package/init":4,"./node_modules/snabbdom/build/package/modules/attributes":6,"./node_modules/snabbdom/build/package/modules/class":7,"./node_modules/snabbdom/build/package/modules/eventlisteners":8,"./node_modules/snabbdom/build/package/modules/props":9,"./node_modules/snabbdom/build/package/modules/style":10,"./node_modules/snabbdom/build/package/tovnode":11}],2:[function(require,module,exports){
+},{"./node_modules/snabbdom/build/package/h":2,"./node_modules/snabbdom/build/package/init":4,"./node_modules/snabbdom/build/package/modules/attributes":6,"./node_modules/snabbdom/build/package/modules/class":7,"./node_modules/snabbdom/build/package/modules/dataset":8,"./node_modules/snabbdom/build/package/modules/eventlisteners":9,"./node_modules/snabbdom/build/package/modules/props":10,"./node_modules/snabbdom/build/package/modules/style":11,"./node_modules/snabbdom/build/package/tovnode":12}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -101,7 +105,7 @@ function h(sel, b, c) {
 
 ;
 
-},{"./is.js":5,"./vnode.js":12}],3:[function(require,module,exports){
+},{"./is.js":5,"./vnode.js":13}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -560,7 +564,7 @@ function init(modules, domApi) {
   };
 }
 
-},{"./htmldomapi.js":3,"./is.js":5,"./vnode.js":12}],5:[function(require,module,exports){
+},{"./htmldomapi.js":3,"./is.js":5,"./vnode.js":13}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -685,6 +689,55 @@ exports.classModule = classModule;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.datasetModule = void 0;
+const CAPS_REGEX = /[A-Z]/g;
+
+function updateDataset(oldVnode, vnode) {
+  const elm = vnode.elm;
+  let oldDataset = oldVnode.data.dataset;
+  let dataset = vnode.data.dataset;
+  let key;
+  if (!oldDataset && !dataset) return;
+  if (oldDataset === dataset) return;
+  oldDataset = oldDataset || {};
+  dataset = dataset || {};
+  const d = elm.dataset;
+
+  for (key in oldDataset) {
+    if (!dataset[key]) {
+      if (d) {
+        if (key in d) {
+          delete d[key];
+        }
+      } else {
+        elm.removeAttribute('data-' + key.replace(CAPS_REGEX, '-$&').toLowerCase());
+      }
+    }
+  }
+
+  for (key in dataset) {
+    if (oldDataset[key] !== dataset[key]) {
+      if (d) {
+        d[key] = dataset[key];
+      } else {
+        elm.setAttribute('data-' + key.replace(CAPS_REGEX, '-$&').toLowerCase(), dataset[key]);
+      }
+    }
+  }
+}
+
+const datasetModule = {
+  create: updateDataset,
+  update: updateDataset
+};
+exports.datasetModule = datasetModule;
+
+},{}],9:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.eventListenersModule = void 0;
 
 function invokeHandler(handler, vnode, event) {
@@ -774,7 +827,7 @@ const eventListenersModule = {
 };
 exports.eventListenersModule = eventListenersModule;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -810,7 +863,7 @@ const propsModule = {
 };
 exports.propsModule = propsModule;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -942,7 +995,7 @@ const styleModule = {
 };
 exports.styleModule = styleModule;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -996,7 +1049,7 @@ function toVNode(node, domApi) {
   }
 }
 
-},{"./htmldomapi.js":3,"./vnode.js":12}],12:[function(require,module,exports){
+},{"./htmldomapi.js":3,"./vnode.js":13}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

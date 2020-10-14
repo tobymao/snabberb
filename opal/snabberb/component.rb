@@ -5,25 +5,87 @@ module Snabberb
     attr_accessor :node
     attr_reader :root
 
-    VOID = %i[
-      area base br col embed hr img input keygen
-      link meta param source track wbr
-    ].map { |elm| [elm, true] }.to_h
+    %x{
+      const VOID = new Set([
+        'area',
+        'base',
+        'br',
+        'col',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+        'track',
+        'wbr',
+      ])
 
-    IGNORE = %i[
-      attributes childElementCount children classList clientHeight clientLeft
-      clientTop clientWidth currentStyle firstElementChild innerHTML lastElementChild
-      nextElementSibling ongotpointercapture onlostpointercapture onwheel outerHTML
-      previousElementSibling runtimeStyle scrollHeight scrollLeft scrollLeftMax scrollTop
-      scrollTopMax scrollWidth tabStop tagName
-    ].map { |elm| [elm, true] }.to_h
+      const IGNORE = new Set([
+        'attributes',
+        'childElementCount',
+        'children',
+        'classList',
+        'clientHeight',
+        'clientLeft',
+        'clientTop',
+        'clientWidth',
+        'currentStyle',
+        'firstElementChild',
+        'innerHTML',
+        'lastElementChild',
+        'nextElementSibling',
+        'ongotpointercapture',
+        'onlostpointercapture',
+        'onwheel',
+        'outerHTML',
+        'previousElementSibling',
+        'runtimeStyle',
+        'scrollHeight',
+        'scrollLeft',
+        'scrollLeftMax',
+        'scrollTop',
+        'scrollTopMax',
+        'scrollWidth',
+        'tabStop',
+        'tagName',
+      ])
 
-    BOOLEAN = %i[
-      disabled visible checked readonly required allowfullscreen autofocus
-      autoplay compact controls default formnovalidate hidden ismap itemscope
-      loop multiple muted noresize noshade novalidate nowrap open reversed
-      seamless selected sortable truespeed typemustmatch
-    ].map { |elm| [elm, true] }.to_h
+      const BOOLEAN = new Set([
+        'disabled',
+        'visible',
+        'checked',
+        'readonly',
+        'required',
+        'allowfullscreen',
+        'autofocus',
+        'autoplay',
+        'compact',
+        'controls',
+        'default',
+        'formnovalidate',
+        'hidden',
+        'ismap',
+        'itemscope',
+        'loop',
+        'multiple',
+        'muted',
+        'noresize',
+        'noshade',
+        'novalidate',
+        'nowrap',
+        'open',
+        'reversed',
+        'seamless',
+        'selected',
+        'sortable',
+        'truespeed',
+        'typemustmatch',
+      ])
+    }
 
     # You can define needs in each component. They are automatically set as instance variables
     #
@@ -77,7 +139,7 @@ module Snabberb
     end
 
     def html
-      node_to_s(Native(render))
+      node_to_s(render)
     end
 
     # Building block for dom elements using Snabbdom h and Snabberb components.
@@ -118,6 +180,7 @@ module Snabberb
       @@patcher ||= %x{snabbdom.init([
         snabbdom.attributesModule,
         snabbdom.classModule,
+        snabbdom.datasetModule,
         snabbdom.eventListenersModule,
         snabbdom.propsModule,
         snabbdom.styleModule,
@@ -172,97 +235,109 @@ module Snabberb
       end
     end
 
+    # rubocop:disable Lint/UnusedMethodArgument
     def parse_sel(sel)
-      tag = nil
-      id = nil
-      classes = {}
-      parts = (sel || '').split('.')
-      last = parts.size - 1
+      %x{
+        let tag = ''
+        let id = ''
+        const classes = {}
+        const parts = sel.split(".")
+        const last = parts.length - 1
 
-      parts.each_with_index do |part, index|
-        if index == last
-          part, id = part.split('#')
-          index.zero? ? tag = part : classes[part] = true
-        elsif !tag
-          tag = part
-        else
-          classes[part] = true
-        end
-      end
+        parts.forEach((part, index) => {
+          if (index == last) {
+            part = part.split('#')
+            if (part.length > 1) id = part[1]
+            part = part[0]
+            index == 0 ? tag = part : classes[part] = true
+          } else if (!tag) {
+            tag = part
+          } else {
+            classes[part] = true
+          }
+        })
 
-      {
-        tag: tag.empty? ? 'div' : tag,
-        id: id || '',
-        classes: classes,
+        return {
+          tag: tag,
+          id: id,
+          classes: classes,
+        }
       }
     end
 
     def node_to_s(vnode)
-      return vnode.text if !vnode.sel && vnode.text.is_a?(String)
+      %x{
+        if (!vnode.sel) return self.$escape(vnode.text)
 
-      sel = parse_sel(vnode.sel)
+        const sel = self.$parse_sel(vnode.sel)
 
-      vnode.data[:class]&.each do |key, value|
-        value ? sel[:classes][key] = true : sel[:classes].delete(key)
-      end
+        for (const key in vnode.data.class) {
+          vnode.data.class[key] ? sel['classes'][key] = true : delete sel['classes'][key]
+        }
 
-      attributes = {
-        id: sel[:id],
-        class: sel[:classes].keys.join(' '),
-      }.reject { |_, v| v.empty? }
+        let attributes = {}
+        if (sel['id'].length > 0) attributes['id'] = sel['id']
 
-      vnode.data[:attrs]&.each do |key, value|
-        attributes[key] = escape(value)
-      end
+        const classes = Object.keys(sel['classes'])
+        if (classes.length > 0) attributes['class'] = classes.join(' ')
 
-      vnode.data[:dataset]&.each do |key, value|
-        attributes["data-#{key}"] = escape(value)
-      end
+        for (const key in vnode.data.attrs) {
+          attributes[key] = vnode.data.attrs[key]
+        }
 
-      vnode.data[:props]&.each do |key, value|
-        next if IGNORE[key]
+        for (const key in vnode.data.dataset) {
+          attributes['data-' + key] = vnode.data.dataset[key]
+        }
 
-        if BOOLEAN[key]
-          attributes[key] = key if value
-        else
-          attributes[key] = escape(value)
-        end
-      end
+        for (const key in vnode.data.props) {
+          if (!IGNORE.has(key)) {
+            const value = vnode.data.props[key]
 
-      # styles is an object and doesn't respond to map
-      styles = []
-      vnode.data[:style]&.each do |key, value|
-        key = `key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()` # rubocop:disable Lint/ShadowedArgument
-        styles << "#{key}: #{escape(value)}"
-      end
-      attributes[:style] = styles.join(';') unless styles.empty?
+            if (BOOLEAN.has(key)) {
+              if (value) attributes[key] = key
+            } else {
+              attributes[key] = value
+            }
+          }
+        }
 
-      attributes = attributes.map do |key, value|
-        "#{key}=\"#{value}\""
-      end.join(' ')
+        const styles = []
 
-      tag = sel[:tag]
-      elements = []
-      elements << "<#{tag}"
-      elements << ' ' + attributes unless attributes.empty?
-      elements << '>'
+        for (let key in vnode.data.style) {
+          const value = vnode.data.style[key]
+          key = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+          styles.push(key + ': ' + value)
+        }
 
-      unless VOID[tag]
-        if (html = vnode.data.props&.innerHTML)
-          elements << html
-        elsif (text = vnode.text)
-          elements << escape(text)
-        elsif (children = vnode.children)
-          children.each do |child|
-            elements << node_to_s(child)
-          end
-        end
+        if (styles.length > 0) attributes['style'] = styles.join('; ')
 
-        elements << "</#{tag}>"
-      end
+        attributes = Object.keys(attributes).map(key =>
+          self.$escape(key) + '="' + self.$escape(attributes[key]) + '"'
+        )
 
-      elements.join
+        const tag = sel['tag']
+        const elements = ['<' + tag]
+        if (attributes.length > 0) elements.push(' ' + attributes.join(' '))
+        elements.push('>')
+
+        if (!VOID.has(tag)) {
+          if (vnode.data.props && vnode.data.props.innerHTML) {
+            elements.push(vnode.data.props.innerHTML)
+          } else if (vnode.text) {
+            elements.push(self.$escape(vnode.text))
+          } else if (vnode.children) {
+            vnode.children.forEach(child =>
+              elements.push(self.$node_to_s(child))
+            )
+          }
+
+          elements.push('</' + tag + '>')
+        }
+
+        return elements.join('')
+      }
     end
+    # rubocop:enable Lint/UnusedMethodArgument
 
     def escape(html)
       ERB::Util.html_escape(html)
