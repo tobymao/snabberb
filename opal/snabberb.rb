@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
+require 'erb'
 require 'native'
-
 require 'vendor/snabbdom'
-require 'vendor/snabbdom-to-html'
-
 require 'snabberb/component'
 
 module Snabberb

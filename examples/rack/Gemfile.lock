@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    snabberb (0.4.2)
+    snabberb (0.5.0)
       opal (~> 1.0)
 
 GEM

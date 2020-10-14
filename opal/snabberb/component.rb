@@ -5,6 +5,26 @@ module Snabberb
     attr_accessor :node
     attr_reader :root
 
+    VOID = %i[
+      area base br col embed hr img input keygen
+      link meta param source track wbr
+    ].map { |elm| [elm, true] }.to_h
+
+    IGNORE = %i[
+      attributes childElementCount children classList clientHeight clientLeft
+      clientTop clientWidth currentStyle firstElementChild innerHTML lastElementChild
+      nextElementSibling ongotpointercapture onlostpointercapture onwheel outerHTML
+      previousElementSibling runtimeStyle scrollHeight scrollLeft scrollLeftMax scrollTop
+      scrollTopMax scrollWidth tabStop tagName
+    ].map { |elm| [elm, true] }.to_h
+
+    BOOLEAN = %i[
+      disabled visible checked readonly required allowfullscreen autofocus
+      autoplay compact controls default formnovalidate hidden ismap itemscope
+      loop multiple muted noresize noshade novalidate nowrap open reversed
+      seamless selected sortable truespeed typemustmatch
+    ].map { |elm| [elm, true] }.to_h
+
     # You can define needs in each component. They are automatically set as instance variables
     #
     # For example:
@@ -57,7 +77,7 @@ module Snabberb
     end
 
     def html
-      `toHTML(#{render})`
+      node_to_s(Native(render))
     end
 
     # Building block for dom elements using Snabbdom h and Snabberb components.
@@ -150,6 +170,102 @@ module Snabberb
           raise "Needs '#{key}' required but not provided."
         end
       end
+    end
+
+    def parse_sel(sel)
+      tag = nil
+      id = nil
+      classes = {}
+      parts = (sel || '').split('.')
+      last = parts.size - 1
+
+      parts.each_with_index do |part, index|
+        if index == last
+          part, id = part.split('#')
+          index.zero? ? tag = part : classes[part] = true
+        elsif !tag
+          tag = part
+        else
+          classes[part] = true
+        end
+      end
+
+      {
+        tag: tag.empty? ? 'div' : tag,
+        id: id || '',
+        classes: classes,
+      }
+    end
+
+    def node_to_s(vnode)
+      return vnode.text if !vnode.sel && vnode.text.is_a?(String)
+
+      sel = parse_sel(vnode.sel)
+
+      vnode.data[:class]&.each do |key, value|
+        value ? sel[:classes][key] = true : sel[:classes].delete(key)
+      end
+
+      attributes = {
+        id: sel[:id],
+        class: sel[:classes].keys.join(' '),
+      }.reject { |_, v| v.empty? }
+
+      vnode.data[:attrs]&.each do |key, value|
+        attributes[key] = escape(value)
+      end
+
+      vnode.data[:dataset]&.each do |key, value|
+        attributes["data-#{key}"] = escape(value)
+      end
+
+      vnode.data[:props]&.each do |key, value|
+        next if IGNORE[key]
+
+        if BOOLEAN[key]
+          attributes[key] = key if value
+        else
+          attributes[key] = escape(value)
+        end
+      end
+
+      # styles is an object and doesn't respond to map
+      styles = []
+      vnode.data[:style]&.each do |key, value|
+        key = `key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()` # rubocop:disable Lint/ShadowedArgument
+        styles << "#{key}: #{escape(value)}"
+      end
+      attributes[:style] = styles.join(';') unless styles.empty?
+
+      attributes = attributes.map do |key, value|
+        "#{key}=\"#{value}\""
+      end.join(' ')
+
+      tag = sel[:tag]
+      elements = []
+      elements << "<#{tag}"
+      elements << ' ' + attributes unless attributes.empty?
+      elements << '>'
+
+      unless VOID[tag]
+        if (html = vnode.data.props&.innerHTML)
+          elements << html
+        elsif (text = vnode.text)
+          elements << escape(text)
+        elsif (children = vnode.children)
+          children.each do |child|
+            elements << node_to_s(child)
+          end
+        end
+
+        elements << "</#{tag}>"
+      end
+
+      elements.join
+    end
+
+    def escape(html)
+      ERB::Util.html_escape(html)
     end
   end
 
