@@ -242,10 +242,9 @@ module Snabberb
         let id = ''
         const classes = {}
         const parts = sel.split(".")
-        const last = parts.length - 1
 
         parts.forEach((part, index) => {
-          if (index == last) {
+          if (index == 0) {
             part = part.split('#')
             if (part.length > 1) id = part[1]
             part = part[0]

@@ -185,8 +185,8 @@ describe Snabberb do
     it 'renders hyperscript' do
       expect(elements_to_html("h('div.a')")).to eq('<div class="a"></div>')
       expect(elements_to_html("h('div#id')")).to eq('<div id="id"></div>')
-      expect(elements_to_html("h('div.a#id')")).to eq('<div id="id" class="a"></div>')
-      expect(elements_to_html("h('div.a.b#id')")).to eq('<div id="id" class="a b"></div>')
+      expect(elements_to_html("h('div#id.a')")).to eq('<div id="id" class="a"></div>')
+      expect(elements_to_html("h('div#id.a.b')")).to eq('<div id="id" class="a b"></div>')
     end
 
     it 'renders a file' do
