@@ -87,6 +87,17 @@ module Snabberb
       ])
     }
 
+    %x{
+      const PATCHER = snabbdom.init([
+        snabbdom.attributesModule,
+        snabbdom.classModule,
+        snabbdom.datasetModule,
+        snabbdom.eventListenersModule,
+        snabbdom.propsModule,
+        snabbdom.styleModule,
+      ])
+    }
+
     # You can define needs in each component. They are automatically set as instance variables
     #
     # For example:
@@ -109,7 +120,7 @@ module Snabberb
     def self.attach(container, **passed_needs)
       component = new(nil, passed_needs)
       component.node = `document.getElementById(#{container})`
-      component.update
+      component.update!
     end
 
     # Render the component as an HTML string using snabbdom-to-html.
@@ -177,16 +188,8 @@ module Snabberb
       request_ids.shift
       return unless request_ids.empty?
 
-      @@patcher ||= %x{snabbdom.init([
-        snabbdom.attributesModule,
-        snabbdom.classModule,
-        snabbdom.datasetModule,
-        snabbdom.eventListenersModule,
-        snabbdom.propsModule,
-        snabbdom.styleModule,
-      ])}
       node = @root.render
-      @@patcher.call(@root.node, node)
+      `PATCHER(#{root.node}, #{node})`
       @root.node = node
     end
 
