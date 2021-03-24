@@ -190,7 +190,7 @@ describe Snabberb do
     end
 
     it 'renders a file' do
-      script = Snabberb.html_script('spec/test_component.rb', groceries: { 'apple': 1, 'sausage': 2 })
+      script = Snabberb.html_script('spec/test_component.rb', groceries: { apple: 1, sausage: 2 })
       expect(@js_context.eval(script)).to eq(
         '<div style="width: 100%"><div>apple - 1</div><div>sausage - 2</div></div>'
       )

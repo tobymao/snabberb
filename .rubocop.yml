@@ -1,6 +1,9 @@
 Layout/FirstArrayElementIndentation:
   Enabled: false
 
+Layout/LineLength:
+  Max: 120
+
 Metrics/AbcSize:
   Enabled: false
 
@@ -15,9 +18,6 @@ Metrics/CyclomaticComplexity:
 
 Metrics/PerceivedComplexity:
   Enabled: False
-
-Metrics/LineLength:
-  Max: 120
 
 Metrics/MethodLength:
   Enabled: false
@@ -44,4 +44,6 @@ Style/TrailingCommaInHashLiteral:
   Enabled: false
 
 AllCops:
-  TargetRubyVersion: 2.3
+  NewCops: enable
+  TargetRubyVersion: 2.4
+  SuggestExtensions: false
