@@ -1,14 +1,14 @@
 // browserify build.js -p esmify -s snabbdom > opal/vendor/snabbdom.js
-import { init } from './node_modules/snabbdom/build/package/init'
-import { h } from './node_modules/snabbdom/build/package/h'
-import { toVNode } from './node_modules/snabbdom/build/package/tovnode'
+import { init } from './node_modules/snabbdom/build/init'
+import { h } from './node_modules/snabbdom/build/h'
+import { toVNode } from './node_modules/snabbdom/build/tovnode'
 
-import { attributesModule } from './node_modules/snabbdom/build/package/modules/attributes'
-import { classModule } from './node_modules/snabbdom/build/package/modules/class'
-import { datasetModule } from './node_modules/snabbdom/build/package/modules/dataset'
-import { eventListenersModule } from './node_modules/snabbdom/build/package/modules/eventlisteners'
-import { propsModule } from './node_modules/snabbdom/build/package/modules/props'
-import { styleModule } from './node_modules/snabbdom/build/package/modules/style'
+import { attributesModule } from './node_modules/snabbdom/build/modules/attributes'
+import { classModule } from './node_modules/snabbdom/build/modules/class'
+import { datasetModule } from './node_modules/snabbdom/build/modules/dataset'
+import { eventListenersModule } from './node_modules/snabbdom/build/modules/eventlisteners'
+import { propsModule } from './node_modules/snabbdom/build/modules/props'
+import { styleModule } from './node_modules/snabbdom/build/modules/style'
 
 module.exports.init = init
 module.exports.h = h

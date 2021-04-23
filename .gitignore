@@ -10,6 +10,7 @@
 /examples/roda/build
 /node_modules/
 package-lock.json
+package.json
 
 .DS_STORE
 *.swp
