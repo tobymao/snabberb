@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w[lib opal]
   spec.required_ruby_version = '>= 2.5'
 
-  spec.add_dependency 'opal', '~> 1.1'
+  spec.add_dependency 'opal', '>= 1.1'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'execjs'
