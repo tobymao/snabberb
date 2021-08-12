@@ -143,6 +143,7 @@ describe Snabberb do
 
     it 'renders text' do
       expect(elements_to_html("h('div', 'hello')")).to eq('<div>hello</div>')
+      expect(elements_to_html("h('div', 'a' + '')")).to eq('<div>a</div>')
       expect(elements_to_html("h('div', 1)")).to eq('<div>1</div>')
       expect(elements_to_html("h('div')")).to eq('<div></div>')
       expect(elements_to_html("h('br')")).to eq('<br>')

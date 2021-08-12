@@ -173,6 +173,7 @@ module Snabberb
         props_is_hash = props.is_a?(Hash)
         children = props if !children && !props_is_hash
         props = {} unless props_is_hash
+        children = children.to_s if children.is_a?(String)
         `snabbdom.h(#{element}, #{Native.convert(props)}, #{children})`
       end
     end
