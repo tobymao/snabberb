@@ -74,7 +74,7 @@ function h(sel, b, c) {
     if (is.array(c)) {
       children = c;
     } else if (is.primitive(c)) {
-      text = c;
+      text = c.toString();
     } else if (c && c.sel) {
       children = [c];
     }
@@ -82,7 +82,7 @@ function h(sel, b, c) {
     if (is.array(b)) {
       children = b;
     } else if (is.primitive(b)) {
-      text = b;
+      text = b.toString();
     } else if (b && b.sel) {
       children = [b];
     } else {
@@ -582,7 +582,7 @@ const array = Array.isArray;
 exports.array = array;
 
 function primitive(s) {
-  return typeof s === "string" || typeof s === "number";
+  return typeof s === "string" || typeof s === "number" || s instanceof String;
 }
 
 },{}],6:[function(require,module,exports){
