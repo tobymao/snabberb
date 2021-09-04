@@ -250,8 +250,6 @@ function createKeyToOldIdx(children, beginIdx, endIdx) {
 const hooks = ["create", "update", "remove", "destroy", "pre", "post"];
 
 function init(modules, domApi) {
-  let i;
-  let j;
   const cbs = {
     create: [],
     update: [],
@@ -262,14 +260,12 @@ function init(modules, domApi) {
   };
   const api = domApi !== undefined ? domApi : _htmldomapi.htmlDomApi;
 
-  for (i = 0; i < hooks.length; ++i) {
-    cbs[hooks[i]] = [];
+  for (const hook of hooks) {
+    for (const module of modules) {
+      const currentHook = module[hook];
 
-    for (j = 0; j < modules.length; ++j) {
-      const hook = modules[j][hooks[i]];
-
-      if (hook !== undefined) {
-        cbs[hooks[i]].push(hook);
+      if (currentHook !== undefined) {
+        cbs[hook].push(currentHook);
       }
     }
   }
@@ -582,7 +578,7 @@ const array = Array.isArray;
 exports.array = array;
 
 function primitive(s) {
-  return typeof s === "string" || typeof s === "number" || s instanceof String;
+  return typeof s === "string" || typeof s === "number" || s instanceof String || s instanceof Number;
 }
 
 },{}],6:[function(require,module,exports){
