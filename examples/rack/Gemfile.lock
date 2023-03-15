@@ -13,7 +13,7 @@ GEM
       parser (~> 3.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
-    rack (3.0.4.2)
+    rack (3.0.6.1)
     webrick (1.7.0)
 
 PLATFORMS
