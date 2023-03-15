@@ -22,7 +22,7 @@ GEM
       tilt (>= 1.4)
     parser (3.0.2.0)
       ast (~> 2.4.1)
-    rack (3.0.4.2)
+    rack (3.0.6.1)
     roda (3.64.0)
       rack
     sprockets (4.2.0)
